@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Comment Feedback Analyzer</title>
+  <style>
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 10px; }
+    .positive { color: green; }
+    .negative { color: red; }
+    .neutral { color: gray; }
+  </style>
+</head>
+<body>
+<center>
+  <h1 style="color: blueviolet;"> LinkedIn Feedback Sentiment Analyzer</h1>
+</center>
+  <input type="file" id="fileInput" accept=".json" />
+  <table>
+    <thead>
+      <tr><th>User</th><th>Comment</th><th>Sentiment</th></tr>
+    </thead>
+    <tbody id="output"></tbody>
+  </table>
+
+  <script>
+    const positiveWords = ["great", "amazing", "awesome", "excellent", "good", "fantastic", "well done","Amazing"];
+    const negativeWords = ["bad", "poor", "improvement", "needs", "worst", "not good"];
+
+    function analyzeComment(text) {
+      const comment = text.toLowerCase();
+      let score = 0;
+
+      positiveWords.forEach(word => { if (comment.includes(word)) score++; });
+      negativeWords.forEach(word => { if (comment.includes(word)) score--; });
+
+      return score > 0 ? "Positive" : score < 0 ? "Negative" : "Neutral";
+    }
+
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const comments = JSON.parse(e.target.result);
+        const output = document.getElementById('output');
+        output.innerHTML = "";
+
+        comments.forEach(c => {
+          const sentiment = analyzeComment(c.comment);
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${c.user}</td>
+            <td>${c.comment}</td>
+            <td class="${sentiment.toLowerCase()}">${sentiment}</td>
+          `;
+          output.appendChild(row);
+        });
+      };
+      reader.readAsText(file);
+    });
+  </script>
+  <br>
+  <br>
+  <address>
+    <center>
+    <br>
+    &copy; 2022 LinkedIn Feedback Analyzer. All rights reserved.
+    <br>
+    </center>
+    <CENTER>
+   <h3>ABISHEK N</h3>
+   <h3>HARI PRASANTH D</h3>
+   <h3>KARTHIKEYAN I</h3>
+   <h3>KARTHIKEYAN S</h3>
+    </center>
+  </address>
+</body>
+</html>
+
